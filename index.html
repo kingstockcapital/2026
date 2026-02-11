@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>King Stock Capital Management | KSCM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              gold: {
+                300: '#FDE047',
+                400: '#FCE988', /* Light Shine */
+                500: '#FFD700', /* Real Gold (Bright) */
+                600: '#DAA520', /* Goldenrod (Shadow) */
+                700: '#B8860B',
+              },
+              navy: {
+                900: '#0a192f',
+                800: '#112240',
+                700: '#233554',
+              }
+            },
+            fontFamily: {
+              serif: ['Playfair Display', 'serif'],
+              sans: ['Inter', 'sans-serif'],
+            },
+            backgroundImage: {
+              'gold-gradient': 'linear-gradient(135deg, #FCE988 0%, #FFD700 50%, #DAA520 100%)',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      html { scroll-behavior: smooth; }
+      body { font-family: 'Inter', sans-serif; background-color: #0a192f; color: #e6f1ff; }
+      h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
+      
+      /* Utility for text gradients */
+      .text-gold-gradient {
+        background: linear-gradient(to right, #FCE988, #FFD700, #DAA520, #FFD700, #FCE988);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        animation: shine 4s linear infinite;
+      }
+
+      .text-silver-gradient {
+        background: linear-gradient(to right, #94a3b8, #e2e8f0, #ffffff, #e2e8f0, #94a3b8);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        animation: shine 6s linear infinite;
+      }
+
+      /* Button Border Shine */
+      .btn-shine-border {
+        position: relative;
+        background: linear-gradient(#0a192f, #0a192f) padding-box,
+                    linear-gradient(90deg, #DAA520, #FCE988, #FFD700, #FFFFFF, #FFD700, #FCE988, #DAA520) border-box;
+        border: 2px solid transparent;
+        border-radius: 9999px;
+        background-size: 200% auto;
+        animation: shine 2s linear infinite;
+        color: #FFD700;
+        text-decoration: none;
+      }
+
+      .btn-shine-border:hover {
+        background: #FFD700;
+        color: #0a192f;
+        border-color: #FFD700;
+        animation: none;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+      }
+
+      @keyframes shine {
+        to {
+          background-position: 200% center;
+        }
+      }
+
+      /* Utility class to hide elements */
+      .hidden { display: none !important; }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="min-h-screen bg-navy-900 text-white selection:bg-gold-500 selection:text-navy-900 font-sans">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 top-0 py-8 bg-navy-900/80 backdrop-blur-md">
+        <div class="max-w-3xl mx-auto px-6 flex justify-between items-center">
+            <span class="text-2xl font-serif font-bold text-gold-gradient tracking-widest">
+                KSCM
+            </span>
+            <button id="navContactBtn" class="text-xs font-bold text-gold-500 hover:text-white transition-colors uppercase tracking-widest border border-gold-500 px-4 py-2 rounded-full hover:bg-gold-500 hover:text-navy-900 cursor-pointer">
+                Contact
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity">
+        <div class="bg-navy-900 border border-gold-500 rounded-xl p-8 w-full max-w-lg shadow-2xl relative transform transition-all modal-content">
+            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            
+            <h3 class="text-2xl font-serif text-white mb-6">Contact Us</h3>
+            
+            <div class="space-y-4">
+                <p class="text-gray-400 text-sm font-light leading-relaxed">
+                    For investment inquiries or to request access to our full documentation, please contact us at:
+                </p>
+                
+                <div class="space-y-2">
+                    <label class="text-xs text-gold-500 uppercase tracking-widest font-bold">Email Address</label>
+                    <div class="flex items-center gap-2 bg-navy-800 border border-gray-700 rounded-lg p-4 group hover:border-gold-500/50 transition-colors">
+                        <span class="text-gray-200 text-sm md:text-base truncate flex-1 font-mono">kingstockcapitalmanagement@gmail.com</span>
+                        <button id="modalCopyBtn" class="p-2 hover:bg-gray-700 rounded-md transition-colors text-gold-500" title="Copy to clipboard">
+                            <span class="copy-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                            </span>
+                            <span class="check-icon hidden text-green-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                            </span>
+                        </button>
+                    </div>
+                    <p id="modalCopiedText" class="hidden text-green-400 text-xs text-right mt-1 animate-pulse">Copied to clipboard!</p>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button id="closeModalActionBtn" class="px-6 py-2 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold text-sm rounded transition-colors uppercase tracking-wider shadow-[0_0_15px_rgba(253,224,71,0.3)]">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col items-center text-center px-6 bg-navy-900 pt-32 pb-16 md:pt-40">
+            <div class="my-auto flex flex-col items-center w-full max-w-5xl">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-serif font-bold mb-8 tracking-tight leading-tight">
+                    <span class="text-silver-gradient">King Stock</span> <br />
+                    <span class="text-gold-gradient">
+                        Capital Management
+                    </span>
+                </h1>
+                <p class="max-w-3xl text-lg md:text-2xl text-gray-400 leading-relaxed font-light mb-10">
+                    The foundation for building a comprehensive investment firm <br class="hidden md:block"/>
+                    and establishing a specialized <span class="text-white">global bank</span>.
+                </p>
+                
+                <a 
+                    href="https://drive.google.com/file/d/1cyVniPfiLoI-QKlEkxGK-MoNh-tyNbRt/view?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group mb-16 inline-flex items-center gap-3 px-8 py-3 text-sm font-bold uppercase tracking-widest transition-all duration-300 btn-shine-border"
+                >
+                    <span>Read Full Pitch Deck</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+                
+                <div class="flex flex-wrap justify-center gap-12 text-center">
+                    <div>
+                        <div class="text-3xl font-serif text-white">$100M</div>
+                        <div class="text-xs text-gold-500 uppercase tracking-widest mt-2">Seed Fund</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-serif text-white">500M</div>
+                        <div class="text-xs text-gold-500 uppercase tracking-widest mt-2">Pi Reserve</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vision Section -->
+        <section class="py-24 px-6 bg-navy-800">
+            <div class="max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12 items-start mb-24">
+                    <div>
+                        <h2 class="text-gold-500 text-xs font-bold uppercase tracking-widest mb-6">The Macro Thesis</h2>
+                        <h3 class="text-3xl md:text-4xl font-serif text-white leading-tight mb-6">
+                            From Gold to Oil... <br/>To Code.
+                        </h3>
+                    </div>
+                    <div class="space-y-6 text-gray-400 font-light text-lg leading-relaxed">
+                        <p>
+                            <strong>1944: Bretton Woods.</strong> The world anchored stability on Gold. <br/>
+                            <strong>1974: The Petrodollar.</strong> Stability was enforced by Oil and geopolitical power. <br/>
+                            <strong>2025+: The Digital Consensus.</strong> The world demands a neutral, finite, and borderless standard.
+                        </p>
+                        <p>
+                            The current financial system is plagued by inflation ($300T global debt) and centralized manipulation. Pi Network, with its fixed supply of 100 billion and 60 million users, represents the inevitable shift to a transparent, algorithmic monetary standard.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-700 pt-16">
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <h2 class="text-gold-500 text-xs font-bold uppercase tracking-widest mb-6">The KSCM Goal</h2>
+                            <h3 class="text-2xl md:text-3xl font-serif text-white leading-tight mb-4">
+                                Southeast Asia’s Premier Pi-Based Bank.
+                            </h3>
+                        </div>
+                        <div class="text-gray-400 font-light text-lg leading-relaxed">
+                            <p>
+                                We are not just investing. We are building the infrastructure to mobilize the <strong>64 Billion "Dormant Pi"</strong> currently held by individuals. By transforming this digital store of value into active capital for lending, bonds, and global trade, we position Vietnam as a financial hub of the new economy.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Valuation Section -->
+        <section class="py-24 px-6 bg-navy-900 border-t border-gray-800">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-gold-500 text-xs font-bold uppercase tracking-widest mb-4">The Opportunity</h2>
+                    <h3 class="text-3xl md:text-4xl font-serif text-white mb-6">Why Pi? The Valuation Models</h3>
+                    <p class="text-gray-400 max-w-2xl mx-auto">
+                        Unlike speculative assets, Pi's value is derived from its potential to replace global liquidity pools. Based on global wealth data (Credit Suisse, IMF, World Bank), we project significant upside.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Model 1 -->
+                    <div class="bg-navy-800 p-8 border border-gray-700 hover:border-gold-500/50 transition-colors">
+                        <h4 class="text-gold-500 font-serif text-xl mb-2">Global Wealth Model</h4>
+                        <div class="text-3xl font-bold text-white mb-4">$7,578 <span class="text-sm font-normal text-gray-500">/ Pi</span></div>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Based on $485 Trillion in total global individual wealth distributed across the 64 Billion Pi circulating among the population.
+                        </p>
+                    </div>
+
+                    <!-- Model 2 -->
+                    <div class="bg-navy-800 p-8 border border-gray-700 hover:border-gold-500/50 transition-colors relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-gold-500 text-navy-900 text-xs font-bold px-3 py-1">INSTITUTIONAL</div>
+                        <h4 class="text-gold-500 font-serif text-xl mb-2">Institutional Wealth</h4>
+                        <div class="text-3xl font-bold text-white mb-4">$11,111 <span class="text-sm font-normal text-gray-500">/ Pi</span></div>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Based on $300-500 Trillion in assets held by governments and enterprises, allocated to the 36 Billion Pi reserved for institutions.
+                        </p>
+                    </div>
+
+                    <!-- Model 3 -->
+                    <div class="bg-navy-800 p-8 border border-gray-700 hover:border-gold-500/50 transition-colors">
+                        <h4 class="text-gold-500 font-serif text-xl mb-2">Reserve Liquidity</h4>
+                        <div class="text-3xl font-bold text-white mb-4">$1,635 <span class="text-sm font-normal text-gray-500">/ Pi</span></div>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Conservative estimate based solely on converting 100% of Global Forex Reserves ($12.3T) and Gold Reserves ($4.35T) into Pi liquidity.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <p class="text-gray-500 text-sm italic">
+                        *Projections based on full global adoption scenarios outlined in the <a href="https://drive.google.com/file/d/1cyVniPfiLoI-QKlEkxGK-MoNh-tyNbRt/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="underline hover:text-gold-500 transition-colors">KSCM Research Papers (2025)</a>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategy Section -->
+        <section class="py-24 px-6 bg-navy-900">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-gold-500 text-xs font-bold uppercase tracking-widest mb-16 text-center">Investment Strategy</h2>
+                
+                <div class="grid md:grid-cols-2 gap-x-16 gap-y-16">
+                    <!-- Item 1 -->
+                    <div class="flex flex-col items-start">
+                        <div class="mb-4 p-3 border border-gold-500/20 rounded-full bg-navy-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gold-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-white mb-3">Pi Payment Escrow</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Investing in decentralized escrow solutions to replace traditional banking letters of credit, securing KSCM's dominance in transaction infrastructure.
+                        </p>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="flex flex-col items-start">
+                        <div class="mb-4 p-3 border border-gold-500/20 rounded-full bg-navy-800">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gold-500"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-white mb-3">On-Chain Analysis</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Funding platforms that analyze real-time economic behavior and cash flow trends within the blockchain economy to drive data-centric decisions.
+                        </p>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="flex flex-col items-start">
+                        <div class="mb-4 p-3 border border-gold-500/20 rounded-full bg-navy-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gold-500"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-white mb-3">P2P Investment Hub</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Creating a decentralized platform connecting investors with high-potential Pi-based startups, fostering institutional wealth creation.
+                        </p>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="flex flex-col items-start">
+                        <div class="mb-4 p-3 border border-gold-500/20 rounded-full bg-navy-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gold-500"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-white mb-3">The Pi-Based Bank</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Headquartered in Vietnam. We aim to mobilize the 63.9 billion dormant Pi to provide savings (0.5-1.5%) and lending services (3-5%).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-20 border-t border-gray-800 pt-12 text-center">
+                    <p class="text-gray-500 text-sm max-w-2xl mx-auto italic">
+                        "As Pi cements its role as a global currency, KSCM will strategically pivot reserves into Bonds and Dividend-Paying Stocks to ensure long-term stability."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap Section -->
+        <section class="py-24 px-6 bg-navy-800">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-gold-500 text-xs font-bold uppercase tracking-widest mb-12 text-center md:text-left">Strategic Roadmap</h2>
+                
+                <div class="space-y-12 border-l border-gold-500/30 ml-3 md:ml-0 pl-8 md:pl-12 py-2">
+                    <!-- Step 1 -->
+                    <div class="relative">
+                        <div class="absolute -left-[41px] md:-left-[57px] top-1 w-5 h-5 rounded-full border-4 border-navy-800 bg-gold-500"></div>
+                        <div class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8">
+                            <span class="text-gold-500 font-serif font-bold text-lg min-w-[120px]">Phase 1</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Foundation & Seed</h3>
+                                <p class="text-gray-400 text-sm max-w-lg leading-relaxed">Secure $100M Seed Fund to establish KSCM's credibility and operational infrastructure. Begin the journey to build a comprehensive investment firm.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="relative">
+                        <div class="absolute -left-[41px] md:-left-[57px] top-1 w-5 h-5 rounded-full border-4 border-navy-800 bg-gold-500"></div>
+                        <div class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8">
+                            <span class="text-gold-500 font-serif font-bold text-lg min-w-[120px]">Phase 2</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">The 500M Reserve</h3>
+                                <p class="text-gray-400 text-sm max-w-lg leading-relaxed">Strategic acquisition of 500 Million Pi tokens. At projected valuations, this asset base aims to reach between $500 Billion and $12.5 Trillion.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="relative">
+                        <div class="absolute -left-[41px] md:-left-[57px] top-1 w-5 h-5 rounded-full border-4 border-navy-800 bg-gold-500"></div>
+                        <div class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8">
+                            <span class="text-gold-500 font-serif font-bold text-lg min-w-[120px]">Phase 3</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Ecosystem Deployment</h3>
+                                <p class="text-gray-400 text-sm max-w-lg leading-relaxed">Allocating 15% of the portfolio to dominate the Pi ecosystem: Pi Payment Escrow, Transaction Platforms, On-Chain Analysis, and Web3 Startups.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="relative">
+                        <div class="absolute -left-[41px] md:-left-[57px] top-1 w-5 h-5 rounded-full border-4 border-navy-800 bg-gold-500"></div>
+                        <div class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8">
+                            <span class="text-gold-500 font-serif font-bold text-lg min-w-[120px]">Phase 4</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Banking & Institutional</h3>
+                                <p class="text-gray-400 text-sm max-w-lg leading-relaxed">Establishment of Southeast Asia’s Premier Pi-Based Bank, headquartered in Vietnam. Mobilizing the 64 Billion dormant Pi to offer savings, lending, and bonds.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="py-24 px-6 bg-navy-800">
+            <div class="max-w-3xl mx-auto text-center">
+                <p class="text-xl md:text-3xl font-serif italic text-gray-300 mb-8 leading-relaxed">
+                    "We don't just speculate on the future of money. We build it."
+                </p>
+                <div class="text-gold-500 font-bold uppercase tracking-widest text-xs">
+                    Dang Quan Vuong — Founder
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-32 px-6 text-center bg-navy-900">
+            <h2 class="text-3xl md:text-5xl font-serif font-bold text-white mb-8">
+                Join the Fund.
+            </h2>
+            
+            <div class="relative inline-block group">
+                <button id="footerCopyBtn" class="inline-flex items-center gap-3 text-gold-500 text-lg md:text-xl hover:text-white transition-all border-b border-gold-500 hover:border-white pb-1 cursor-pointer bg-transparent">
+                    <span class="font-mono">kingstockcapitalmanagement@gmail.com</span>
+                    <span class="opacity-50 group-hover:opacity-100 transition-opacity copy-icon-footer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    </span>
+                    <span class="check-icon-footer hidden text-green-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    </span>
+                </button>
+                
+                <div id="footerCopiedText" class="absolute left-1/2 -translate-x-1/2 -bottom-8 text-green-400 text-xs font-bold transition-opacity duration-300 opacity-0">
+                    Copied!
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-navy-900 py-12 text-center">
+        <div class="text-gray-600 text-xs tracking-widest uppercase">
+            &copy; <span id="year"></span> King Stock Capital Management
+        </div>
+    </footer>
+
+    <!-- Scripts for Logic -->
+    <script>
+        // Set Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // --- Navbar Modal Logic ---
+        const navContactBtn = document.getElementById('navContactBtn');
+        const contactModal = document.getElementById('contactModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const closeModalActionBtn = document.getElementById('closeModalActionBtn');
+        const modalContent = document.querySelector('.modal-content');
+
+        function openModal() {
+            contactModal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            contactModal.classList.add('hidden');
+        }
+
+        navContactBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        closeModalActionBtn.addEventListener('click', closeModal);
+
+        // Click outside to close
+        contactModal.addEventListener('click', (e) => {
+            closeModal();
+        });
+
+        // Prevent closing when clicking inside content
+        modalContent.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // --- Copy to Clipboard Logic (Shared Function) ---
+        const email = "kingstockcapitalmanagement@gmail.com";
+
+        function copyToClipboard(buttonElement, copyIconSelector, checkIconSelector, textElement, isFooter = false) {
+            navigator.clipboard.writeText(email).then(() => {
+                const copyIcon = buttonElement.querySelector(copyIconSelector);
+                const checkIcon = buttonElement.querySelector(checkIconSelector);
+                
+                // Toggle icons
+                if(copyIcon) copyIcon.classList.add('hidden');
+                if(checkIcon) checkIcon.classList.remove('hidden');
+
+                // Show text
+                if (textElement) {
+                    textElement.classList.remove('hidden');
+                    if(isFooter) textElement.classList.remove('opacity-0');
+                }
+
+                setTimeout(() => {
+                    // Revert icons
+                    if(copyIcon) copyIcon.classList.remove('hidden');
+                    if(checkIcon) checkIcon.classList.add('hidden');
+                    
+                    // Hide text
+                    if (textElement) {
+                        if(isFooter) {
+                            textElement.classList.add('opacity-0');
+                        } else {
+                            textElement.classList.add('hidden');
+                        }
+                    }
+                }, 2000);
+            });
+        }
+
+        // Modal Copy Button
+        const modalCopyBtn = document.getElementById('modalCopyBtn');
+        const modalCopiedText = document.getElementById('modalCopiedText');
+        modalCopyBtn.addEventListener('click', () => {
+            copyToClipboard(modalCopyBtn, '.copy-icon', '.check-icon', modalCopiedText);
+        });
+
+        // Footer Copy Button
+        const footerCopyBtn = document.getElementById('footerCopyBtn');
+        const footerCopiedText = document.getElementById('footerCopiedText');
+        footerCopyBtn.addEventListener('click', () => {
+            copyToClipboard(footerCopyBtn, '.copy-icon-footer', '.check-icon-footer', footerCopiedText, true);
+        });
+
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
